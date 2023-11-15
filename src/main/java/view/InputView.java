@@ -61,11 +61,38 @@ public class InputView {
         String input = Console.readLine();
         String[][] menu = new String[12][2];
 
-        String[] temp = input.split(",");
-        for (int i = 0; i<temp.length; i++) {
-            menu[i] = temp[i].split("-");
+        try {
+            String[] temp = input.split(",");
+            for (int i = 0; i<temp.length; i++) {
+                menu[i] = temp[i].split("-");
+            }
+            handleMenuException(menu);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
-
         return menu;
+    }
+
+    private void handleMenuException(String[][] menu) {
+        String[][] appetizerMenu = {{"양송이수프", "6000"}, {"타파스", "5500"}, {"시저샐러드", "8000"}};
+        String[][] mainMenu = {{"티본스테이크", "55000"}, {"바비큐립", "54000"}, {"해산물파스타", "35000"}, {"크리스마스파스타", "25000"}};
+        String[][] desertMenu = {{"초코케이크", "15000"}, {"아이스크림", "5000"}};
+        String[][] drinkMenu = {{"제로콜라", "3000"}, {"레드와인", "60000"}, {"샴페인", "25000"}};
+
+        int menuType = menu.length;
+        int drinkMenuNum = 0;
+        int menuNum = 0;
+        for (String[] value : menu) {
+            if (Integer.parseInt(value[1]) < 0) throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+            menuNum += Integer.parseInt(value[1]);
+            for (String[] strings : drinkMenu) {
+                if (value[0].equals(strings[0])) {
+                    drinkMenuNum++;
+                }
+            }
+        }
+        if (menuNum == drinkMenu.length) throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+        if (menuNum > 20 ) throw new IllegalArgumentException("[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.");
+
     }
 }
